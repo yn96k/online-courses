@@ -1,0 +1,730 @@
+openapi: 3.0.3
+info:
+  title: Онлайн-курсы API
+  version: 1.0
+
+paths:
+
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Создание нового пользователя
+      description: Создает нового пользователя
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequest'
+      parameters:
+        - $ref: '#/components/parameters/X-Trace-ID'
+        - $ref: '#/components/parameters/X-Idempotency-Key'
+      responses:
+        '201':
+          description: Пользователь успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreateResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests'}
+        default: { $ref: '#/components/responses/ServerError' } 
+        '503': { $ref: '#/components/responses/ServiceUnavailable'} 
+
+  /users/{user_id}/info:
+    get:
+      tags:
+        - Users
+      summary: Получение информации о пользователе
+      description: Возвращает информацию о пользователе в зависимости от его роли (student, author, admin).
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/X-Trace-ID'
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/AdminInfo'
+                  - $ref: '#/components/schemas/AuthorInfo'
+                  - $ref: '#/components/schemas/StudentInfo'
+                discriminator:
+                  propertyName: role
+              examples:
+                student: 
+                  $ref: '#/components/examples/student'
+                author:
+                  $ref: '#/components/examples/author'
+                admin:
+                  $ref: '#/components/examples/admin'
+                
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests'}
+        default: { $ref: '#/components/responses/ServerError' } 
+        '503': { $ref: '#/components/responses/ServiceUnavailable'}
+  /reviews/{course_id}:
+    post:
+      tags:
+        - Reviews
+      summary: Создание отзыва на курс
+      description: Позволяет пользователю добавить отзыв к курсу. Требуется авторизация.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCreateRequest'
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          description: Идентификатор курса
+          schema:
+            type: string
+        - name: X-Trace-ID
+          in: header
+          required: false
+          description: Идентификатор запроса для трассировки
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          required: true
+          description: Ключ идемпотентности для предотвращения повторных запросов
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Отзыв успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests'}
+        default: { $ref: '#/components/responses/ServerError' } 
+        '503': { $ref: '#/components/responses/ServiceUnavailable'}  
+  /courses/{course_id}/lessons/{lesson_id}:
+    put:
+      tags:
+      - Courses -> Lessons
+      summary: Обновление информации о уроке
+      description: Позволяет редактировать урок курса. Требуется авторизация.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: course_id
+          in: path
+          required: true
+          description: Идентификатор курса
+          schema:
+            type: string
+            example: c123
+        - name: lesson_id
+          in: path
+          required: true
+          description: Идентификатор урока
+          schema:
+            type: string
+            example: l124
+        - name: X-Trace-ID
+          in: header
+          required: false
+          description: Идентификатор запроса для трассировки
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          required: true
+          description: Ключ идемпотентности для предотвращения повторных запросов
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LessonUpdateRequest'
+      responses:
+        '200':
+          description: Успешное обновление урока
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LessonResponse'
+        '201':
+          description: Успешное создание урока (если урок не существовал)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LessonResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests'}
+        default: { $ref: '#/components/responses/ServerError' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable'}
+  /courses/search:
+    get:
+      tags:
+        - Courses
+      summary: Поиск курсов
+      description: Возвращает список курсов по фильтру.
+      parameters:
+        - name: X-Trace-ID
+          in: header
+          required: false
+          description: Идентификатор запроса для трассировки
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: true
+          description: Строка для фильтрации курсов
+          schema:
+            type: string
+            example: python
+      responses:
+        '200':
+          description: Успешный ответ с результатами поиска
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseSearchResponse'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/TooManyRequests'}
+        default: { $ref: '#/components/responses/ServerError' } 
+        '503':
+          description: Сервис временно недоступен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserCreateRequest:
+      type: object
+      required: [
+        login,
+        email,
+        password_hash,
+        role,
+        notifications_email,
+        notifications_push
+        ]
+      properties:
+        login:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: qwerty
+        first_name:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: John          
+        last_name:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: Doe
+        middle_name:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: Noah
+        email:
+          type: string
+          minLength: 6
+          maxLength: 254
+          example: qwerty
+          pattern: ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$
+        password_hash:
+          type: string
+          minLength: 8
+          maxLength: 50
+        phone_number:
+          type: string        
+          minLength: 5
+          maxLength: 15
+          example: '71234567890'
+        role: 
+          enum: [author, student]
+          default: student
+        avatar_url:
+          type: string
+          format: uri
+          example: https://online-courses.ru/avatars/qwe123.png
+        notifications_email: 
+          enum: [all, important, none]
+          default: important
+        notifications_push: 
+          enum: [all, important]
+          default: important
+          
+    UserCreateResponse:
+      type: object
+      required: [user_id, role, creation_date]
+      properties:
+        user_id:
+          type: string
+          example: qwe123
+        role:
+          enum: [author, student]
+        creation_date:
+          type: string
+          format: date-time
+          example: "2025-08-30T14:30:00"
+  
+    BaseUserInfo:
+      type: object
+      required: [user_id, name, role]
+      properties:
+        user_id:
+          type: string
+          example: qwe123
+        name:
+          type: string
+          example: Иванов Иван
+        avatar:
+          type: string
+          format: uri
+          example: https://online-courses.ru/avatars/qwe123.png
+        bio:
+          type: string
+          example: Информация о себе
+        role:
+          type: string
+          enum: [admin, author, student]
+          example: student
+
+    StudentInfo:
+      allOf:
+        - $ref: '#/components/schemas/BaseUserInfo'
+        - type: object
+          properties:
+            progress:
+              type: object
+              properties:
+                purchased_courses:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CourseProgress'
+          required: [progress]
+
+    AuthorInfo:
+      allOf:
+        - $ref: '#/components/schemas/BaseUserInfo'
+        - type: object
+          properties:
+            authored_courses:
+              type: array
+              items:
+                type: object
+                required: [course_id, title, students_enrolled]
+                properties:
+                  course_id:
+                    type: string
+                    example: c789
+                  title:
+                    type: string
+                    example: Основы анализа данных
+                  students_enrolled:
+                    type: integer
+                    example: 120
+          required: [authored_courses]
+
+    AdminInfo:
+      allOf:
+        - $ref: '#/components/schemas/BaseUserInfo'
+        - type: object
+          properties:
+            permissions:
+              type: array
+              items:
+                type: string
+              example: ["manage_users", "view_reports"]
+          required: [permissions]
+          
+    CourseProgress:
+      type: object
+      required: [course_id, title, completed_lessons, total_lessons]
+      properties:
+        course_id:
+          type: string
+          example: c123
+        title:
+          type: string
+          example: Системная аналитика
+        completed_lessons:
+          type: integer
+          example: 5
+        total_lessons:
+          type: integer
+          example: 20
+          
+    ReviewCreateRequest:
+      type: object
+      required: [course_id, stars, message]
+      properties:
+        course_id:
+          type: string
+          example: c123
+        stars:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 3
+        message:
+          type: string
+          example: "Крутой курс помог трудоустроиться"   
+          
+    ReviewResponse:
+      type: object
+      required: [review_id, course_id, user_id, stars, message, creation_date]
+      properties:
+        review_id:
+          type: string
+          example: rev123
+        course_id:
+          type: string
+          example: c123
+        user_id:
+          type: string
+          example: qwe123
+        stars:
+          type: integer
+          example: 3
+        message:
+          type: string
+          example: "Крутой курс помог трудоустроиться"
+        creation_date:
+          type: string
+          format: date-time
+          example: "2025-08-30T14:30:00"
+
+    LessonUpdateRequest:
+      type: object
+      required: [course_id, lesson_name, lesson_info]
+      properties:
+        course_id:
+          type: string
+          example: c123
+        lesson_name:
+          type: string
+          example: REST API
+        lesson_info:
+          type: string
+          example: "В этом уроке вы узнаете, что такое REST API и для чего он нужен..."
+        prev_lesson_id:
+          type: string
+          example: l123
+        next_lesson_id:
+          type: string
+          example: l125
+
+    LessonResponse:
+      type: object
+      required: [course_id, lesson_name, lesson_info]
+      properties:
+        course_id:
+          type: string
+          example: c123
+        lesson_name:
+          type: string
+          example: REST API
+        lesson_info:
+          type: string
+          example: "В этом уроке вы узнаете, что такое REST API и для чего он нужен..."
+        prev_lesson_id:
+          type: string
+          example: l123
+        next_lesson_id:
+          type: string
+          example: l125
+
+    CourseSearchResponse:
+      type: object
+      required: [query, result]
+      properties:
+        query:
+          type: string
+          example: python
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseItem'
+
+    CourseItem:
+      type: object
+      required: [course_id, course_name, lessons, author_id, price, currency]
+      properties:
+        course_id:
+          type: string
+          example: c123
+        course_name:
+          type: string
+          example: python с нуля
+        lessons:
+          type: integer
+          example: 12
+        author_id:
+          type: string
+          example: a123
+        price:
+          type: number
+          example: 1000
+        currency:
+          type: string
+ 
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI типа проблемы (страница с описанием).
+        title:
+          type: string
+          description: Описание проблемы
+        status:
+          type: integer
+          description: Код ответа.
+        detail:
+          type: string
+          description: Детали проблемы.
+        correlationId:
+          type: string
+          description: ID запроса для трассировки.
+        retryable:
+          type: boolean
+          description: Имеет ли смысл повторить запрос.
+        invalidParams:
+          type: array
+          description: Детализация ошибок валидации.
+          items:
+            $ref: '#/components/schemas/InvalidParam'
+
+    InvalidParam:
+      type: object
+      required: [name, reason]
+      properties:
+        name:
+          type: string
+          description: Имя поля.
+        location:
+          type: string
+          enum: [query, path, header, cookie, body]
+          description: Где находится параметр.
+        reason:
+          type: string
+          description: Почему значение недопустимо.
+        value: {}
+         
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          example: Error message
+  
+  parameters: 
+    UserId:
+      name: user_id
+      in: path
+      required: true
+      description: Идентификатор пользователя
+      schema:
+        type: string
+    X-Trace-ID:
+      name: X-Trace_ID
+      in: header
+      description: Идентификатор запроса для трассировки.
+      schema: { type: string }  
+      
+    X-Idempotency-Key:
+      name: X-Idempotency-Key
+      in: header
+      required: true
+      description: Ключ идемпотентности для предотвращения повторных запросов
+      schema:
+        type: string
+
+  examples:
+    student:
+      summary: Пример ответа для студента
+      value:
+        user_id: qwe123
+        name: Иванов Иван
+        avatar: https://online-courses.ru/avatars/qwe123.png
+        bio: Информация о себе
+        role: student
+        progress:
+          purchased_courses:
+            - course_id: c123
+              title: Системная аналитика
+              completed_lessons: 5
+              total_lessons: 20
+    author:
+      summary: Пример ответа для автора
+      value:
+        user_id: qwe123
+        name: Петров Пётр
+        avatar: https://online-courses.ru/avatars/qwe123.png
+        bio: Автор курсов по аналитике
+        role: author
+        authored_courses:
+          - course_id: c789
+            title: Основы анализа данных
+            students_enrolled: 120
+    admin:
+      summary: Пример ответа для админа
+      value:
+        user_id: qwe123
+        name: Администратор
+        avatar: https://online-courses.ru/avatars/qwe123.png
+        bio: Управление платформой
+        role: admin
+        permissions: ["manage_users", "view_reports"]
+
+  responses:
+    BadRequest:
+      description: Неверный запрос.
+      headers:
+        X-Trace-ID: { $ref: '#/components/headers/X-Trace-ID' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          examples:
+            bad-json:
+              summary: Неверный запрос
+              value:
+                type: https://api.example.com/problems/bad-request
+                title: Неверный формат JSON
+                status: 400
+                detail: Не удалось обработать запрос.
+                correlationId: "a1b2c3"
+
+    Unauthorized:
+      description: Требуется аутентификация.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: https://api.example.com/problems/unauthorized
+            title: Требуется вход
+            status: 401
+
+    Forbidden:
+      description: Нет прав на операцию.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: https://api.example.com/problems/forbidden
+            title: Доступ запрещён
+            status: 403
+
+    NotFound:
+      description: Ресурс не найден.
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: https://api.example.com/problems/not-found
+            title: Не найдено
+            status: 404
+
+    ValidationError:
+      description: Ошибка валидации (422).
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: https://api.example.com/problems/validation-error
+            title: Ошибка валидации
+            status: 422
+            invalidParams:
+              - name: "/email"
+                location: body
+                reason: "Некорректный email"
+                value: "foo@"
+              - name: "limit"
+                location: query
+                reason: "Должно быть >= 1"
+                value: 0
+
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                example: 429
+              error:
+                type: string
+                example: "Too Many Requests"
+              message:
+                type: string
+                example: "Rate limit exceeded. Try again later."
+              retry_after:
+                type: integer
+                description: Время ожидания перед повторным запросом (в секундах)
+                example: 3
+
+    ServerError:
+      description: Непредвиденная ошибка сервера.
+      headers:
+        X-Trace-ID: { $ref: '#/components/headers/X-Trace-ID' }
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          example:
+            type: about:blank
+            title: Внутренняя ошибка
+            status: 500
+            correlationId: "a1b2c3"    
+            
+    ServiceUnavailable:
+      description: Сервис временно недоступен
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Problem' }
+          
+  headers:
+    X-Trace-ID:
+      description: Идентификатор запроса для трассировки.
+      schema: { type: string }        
