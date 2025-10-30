@@ -24,7 +24,7 @@
 - [User Story Map](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/User%20Story%20Map.pdf)
 - [User Stories](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/User%20Stories.md)
 - [Use Cases](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Use%20Cases.md)
-- [C4 диаграмма](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/C4%20containers%20-%20online-course%20PP.pdf)
+- [C4 диаграмма](https://github.com/yn96k/online-courses/blob/4bc3571f1948fe03614330dc186eadd0beb37413/C4%20containers%20-%20online-course%20PP.pdf)
 - [Схемы баз данных](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/DB-scheme.md)
 - [Sequence диаграмма GET запроса поиска курса](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Sequence-diagrams/get-courses-search.png)
 - [Sequence диаграмма GET запроса урока](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Sequence-diagrams/get-lesson.png)
