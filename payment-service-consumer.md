@@ -50,8 +50,6 @@
 | value.role         | string                        | Роль пользователя                                                      |
 | value.phone_number | string                        | Телефон пользователя                                                   |
 | value.updated_at   | string / ISO 8601             | Время последнего обновления данных пользователя                        |
-| value.op           | string / enum                 | Тип операции события (`CREATE`, `UPDATE`, `DELETE`)                    |
 | value.version      | int64                         | Версия события для идемпотентной обработки                             |
-| value.trace_id     | string                        | Идентификатор трассировки события                                      |
 
 
