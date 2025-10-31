@@ -21,13 +21,13 @@
 
 ### Документация
 
-- [User Story Map](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/User%20Story%20Map.pdf)
-- [User Stories](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/User%20Stories.md)
-- [Use Cases](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Use%20Cases.md)
+- [User Story Map](https://github.com/yn96k/online-courses/blob/main/User%20Story%20Map.pdf)
+- [User Stories](https://github.com/yn96k/online-courses/blob/main/User%20Stories.md)
+- [Use Cases](https://github.com/yn96k/online-courses/blob/main/Use%20Cases.md)
 - [C4 диаграмма](https://github.com/yn96k/online-courses/blob/main/C4%20containers%20-%20online-course%20PP.pdf)
-- [Схемы баз данных](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/DB-scheme.md)
-- [Sequence диаграмма GET запроса поиска курса](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Sequence-diagrams/get-courses-search.png)
-- [Sequence диаграмма GET запроса урока](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/Sequence-diagrams/get-lesson.png)
-- [Контракт REST API в Swagger](https://github.com/yn96k/online-courses/blob/8702680c77f13d10e4ceb814bded036177172f92/swagger-rest-api-1.0.yaml)
+- [Схемы баз данных](https://github.com/yn96k/online-courses/blob/main/DB-scheme.md)
+- [Sequence диаграмма GET запроса поиска курса](https://github.com/yn96k/online-courses/blob/main/Sequence-diagrams/get-courses-search.png)
+- [Sequence диаграмма GET запроса урока](https://github.com/yn96k/online-courses/blob/main/Sequence-diagrams/get-lesson.png)
+- [Контракт REST API в Swagger](https://github.com/yn96k/online-courses/blob/main/swagger-rest-api-1.0.yaml)
 - [Спецификация POST запроса на создание пользователя](https://github.com/yn96k/online-courses/blob/main/create-user-spec.md)
 - [Спецификация алгоритма десериализации сообщения с брокера](https://github.com/yn96k/online-courses/blob/main/payment-service-consumer.md)
