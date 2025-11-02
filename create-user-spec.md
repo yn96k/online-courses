@@ -60,7 +60,7 @@
 | notifications_push  | Логическое значение (True/False) для получения push-уведомлений     |
 
 4. Отправка сообщения в брокер 
-   - [userdata.proto](https://github.com/yn96k/online-courses/blob/3e510ddc7500659f2d2b1ce8550b52c5580fe53f/kafka-topic-userdata.proto)
+   - [userdata.proto](https://github.com/yn96k/online-courses/blob/main/kafka-topic-userdata.proto)
 
 | Поле                 | Данные                                                                                                                                                     |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
