@@ -3,19 +3,19 @@
 
 ### Входные данные
 
-| Поле                | Тип данных                 | Ограничения / Описание                                       |
-|---------------------|----------------------------|--------------------------------------------------------------|
-| login               | VARCHAR(20)                    | NOT NULL, уникальное значение                                |
-| first_name          | VARCHAR(20)                    | NULLABLE                                                     |
-| last_name           | VARCHAR(20)                    | NULLABLE                                                     |
-| middle_name         | VARCHAR(20)                    | NULLABLE                                                     |
-| email               | VARCHAR(254)                    | NOT NULL, уникальное значение, формат e-mail                 |
-| password            | VARCHAR(20)                    | NOT NULL, минимальная длина 8 символов                       |
-| phone_number        | VARCHAR(15)                    | NULLABLE, формат: E.164 (например, `+79211009802`)           |
-| role                | ENUM('user','author','admin') | NOT NULL, DEFAULT 'user'                                  |
-| avatar_url          | VARCHAR(100)                    | NULLABLE, формат URL                                         |
-| notifications_email | ENUM('all','important','none') | NOT NULL, DEFAULT 'all'                                   |
-| notifications_push  | ENUM('all','important','none') | NOT NULL, DEFAULT 'all'                                   |
+| Поле                | Тип данных                 | Ограничения / Описание                                               |
+|---------------------|----------------------------|----------------------------------------------------------------------|
+| login               | VARCHAR(20)                    | NOT NULL, уникальное значение                                    |
+| first_name          | VARCHAR(20)                    | NULLABLE                                                         |
+| last_name           | VARCHAR(20)                    | NULLABLE                                                         |
+| middle_name         | VARCHAR(20)                    | NULLABLE                                                         |
+| email               | VARCHAR(254)                    | NOT NULL, уникальное значение, формат e-mail                    |
+| password            | VARCHAR(20)                    | NOT NULL, минимальная длина 8 символов                           |
+| phone_number        | VARCHAR(15)                    | NULLABLE, формат: E.164 (например, `+79211009802`)               |
+| role                | ENUM('user','author','admin') | NOT NULL, DEFAULT 'user'                                          |
+| avatar_url          | VARCHAR(100)                    | NULLABLE, формат URL                                            |
+| notifications_email | ENUM('all','important','none') | NOT NULL, DEFAULT 'all'                                          |
+| notifications_push  | ENUM('all','important','none') | NOT NULL, DEFAULT 'all'                                          |
 | terms               | BOOLEAN[2] (ARRAY)          | NOT NULL, соответствует [согласие_с_сервисом, согласие_с_политикой] |
 
 ### Выходные данные
@@ -62,19 +62,19 @@
 4. Отправка сообщения в брокер 
    - [userdata.proto](https://github.com/yn96k/online-courses/blob/main/kafka-topic-userdata.proto)
 
-| Поле                 | Данные                                                                                                                                                     |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| user_id              | Уникальный идентификатор созданного пользователя                                                                                                           |
-| op                   | 2                                                                                                                                                  |
-| payload.id           | Идентификатор пользователя из тела запроса                                                                                                                 |
-| payload.email        | email из тела запроса                                                                                                                                      |
-| payload.first_name   | first_name из тела запроса                                                                                                                                        |
-| payload.last_name    | last_name из тела запроса                                                                                                                                    |
-| payload.role         | role  из тела запроса                                                                       |
-| payload.phone_number | Телефон из тела запроса                                                                                                                                    |
-| payload.updated_at   | Текущий таймстамп (в формате ISO 8601)                                                                                                                     |
-| updated_at           | Текущий таймстамп (в формате Timestamp protobuf)                                                                                                           |
-| trace_id             | Значение из заголовка `X-Trace-ID` запроса                                                                                                  |
+| Поле                 | Данные                                                 |
+| -------------------- | -------------------------------------------------------|
+| user_id              | Уникальный идентификатор созданного пользователя       |
+| op                   | 1                                                      |
+| payload.id           | Идентификатор пользователя из тела запроса             |
+| payload.email        | email из тела запроса                                  |
+| payload.first_name   | first_name из тела запроса                             |
+| payload.last_name    | last_name из тела запроса                              |
+| payload.role         | role  из тела запроса                                  |
+| payload.phone_number | Телефон из тела запроса                                |
+| payload.updated_at   | Текущий таймстамп (в формате ISO 8601)                 |
+| updated_at           | Текущий таймстамп (в формате Timestamp protobuf)       |
+| trace_id             | Значение из заголовка `X-Trace-ID` запроса             |
 
 5. Формирование HTTP-ответа на запрос
 ### Ошибки
